@@ -3,6 +3,7 @@ import { employeeSelector } from "../redux/reducers/employeeReducer.js"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import styles from "./employeeList.module.css";
 function EmployeeList(){
     const {employeeData} = useSelector(employeeSelector);
     const dispatch = useDispatch();
@@ -25,7 +26,7 @@ function EmployeeList(){
     }
 
     return(
-        <div>
+        <div className={styles.empList}>
             
             <ul>
                 {employeeData.map((emp, index)=>(
@@ -35,7 +36,7 @@ function EmployeeList(){
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{emp.name}</h5>
                             <div>
-                            <NavLink to="/update"><button onClick={()=>handleUpdate(emp.name, emp.salary, emp.department, emp.id)}>update</button></NavLink>
+                            <NavLink to="/update"><button className={styles.updateButton} onClick={()=>handleUpdate(emp.name, emp.salary, emp.department, emp.id)}>update</button></NavLink>
                             <small onClick={()=>handleClick(emp.id)}>Delete</small>
                             </div>
                           
