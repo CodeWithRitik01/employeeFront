@@ -5,16 +5,21 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./employeeList.module.css";
 function EmployeeList(){
-    const {employeeData} = useSelector(employeeSelector);
+
+        const {employeeData, searchDet} = useSelector(employeeSelector);
     const dispatch = useDispatch();
     useEffect(() =>{
        dispatch(getInitialStateAsync());
+      console.log(searchDet,"search")
     },[])
 
     const handleClick = (id) =>{
          console.log(id,"clicked")
          dispatch(deleteEmployeeAsync(id));
     }
+
+
+    
 
     const handleUpdate = (name, salary, department, id)=>{
         console.log(name, salary, department,"update")
@@ -40,6 +45,7 @@ function EmployeeList(){
                             <small onClick={()=>handleClick(emp.id)}>Delete</small>
                             </div>
                           
+                           <img src={emp.imageUrl}></img>
                             
                         </div>
                         <p class="mb-1">{emp.salary}</p>

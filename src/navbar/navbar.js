@@ -1,6 +1,15 @@
+import { useDispatch, useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
+import { actions, employeeSelector } from "../redux/reducers/employeeReducer";
 
 function Navbar(){
+    const dispatch = useDispatch();
+    const {searchDet} = useSelector(employeeSelector)
+
+    const handleSubmit =(e)=>{
+        e.preventDefault();
+        dispatch(actions.setSearchClick());
+    }
    return(
     <>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -19,8 +28,8 @@ function Navbar(){
             </li>
          
         </ul>
-        <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+        <form class="d-flex" role="search" onSubmit={handleSubmit}>
+            <input class="form-control me-2" onChange={(e)=>dispatch(actions.setSearch(e.target.value))} type="search" placeholder="Search" aria-label="Search" />
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
         </div>

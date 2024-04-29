@@ -9,7 +9,9 @@ let INTIIALSTATE={
     salary:0,
     department:"",
     updateToggle:false,
-    Ids:""
+    Ids:"",
+    imageUrl:"",
+    searchDet:""
 }
 
 export const getInitialStateAsync = createAsyncThunk("api/employee",
@@ -21,24 +23,55 @@ export const getInitialStateAsync = createAsyncThunk("api/employee",
 
 
 export const addEmployeeAsync = createAsyncThunk("employee/addEmp",async (payload)=>{
-    console.log(payload.name,"seee")
-    try{
-        const response = await fetch("http://localhost:4100/api/employee/addemployee", {
-            method:"POST",
-            headers:{
-                "content-type":"application/json"
-            },
+    
+    // let detail = payload.imageUrl;
+    // const img = {
+    //     fieldname: 'imageUrl',
+    //     originalname: payload.imageUrl.name,
+    //     encoding: '7bit',
+    //     mimetype: 'image/jpeg'
+    //   } 
+    //  let imageUrl = img;
+    // console.log(imageUrl,"seee")
+    // try{
+    //     const response = await fetch("http://localhost:4100/api/employee/addemployee",imageUrl , {
+    //         method:"POST",
+    //         headers:{
+    //             "content-type":"application/json"
+    //         },
            
-            body: JSON.stringify({
-                name:payload.name,
-                salary:payload.salary,
-                department:payload.department
-            })
+    //         body: JSON.stringify({
+    //             name:payload.name,
+    //             salary:payload.salary,
+    //             department:payload.department,
+                 
+    //         })
+    //     });
+    //     console.log(response.json())
+    //     return await response.json();
+    // }catch(err){
+    //    console.log(err);
+    // }
+    const formData = new FormData();
+    formData.append('imageUrl', payload.imageUrl);
+    formData.append('name', payload.name);
+    formData.append('salary', payload.salary);
+    formData.append('department', payload.department);
+
+    try {
+        const response = await fetch("http://localhost:4100/api/employee/addemployee", {
+            method: "POST",
+            body: formData // Send FormData containing file and other form fields
         });
-        console.log(response.json())
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
         return await response.json();
-    }catch(err){
-       console.log(err);
+    } catch (err) {
+        console.error('Error adding employee:', err);
+        throw err; // Rethrow the error to be caught by the thunk middleware
     }
 
 })
@@ -87,6 +120,19 @@ const employeeSlice = createSlice({
        setId:(state, action)=>{
         state.Ids = action.payload;
        },
+       setImage:(state, action)=>{
+       
+        state.imageUrl = action.payload;
+       },
+       setSearch:(state, action)=>{
+        state.searchDet = action.payload;
+        console.log(state.searchDet);
+       },
+       setSearchClick:(state, action)=>{
+        state.employeeData = state.employeeData.filter((item) =>{
+           return item.name.toLowerCase().includes(state.searchDet.toLowerCase())
+          })
+       }
     },
 
     extraReducers:(builder)=>{
